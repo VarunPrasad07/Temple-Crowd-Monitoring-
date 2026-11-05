@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temple Crowd Monitoring & Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="branding">
+        <div class="branding-badge" title="Temple Crowd Management System">
+          <svg class="temple-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L8 6v2h8V6l-4-4z"/>
+            <path d="M6 10h12v3H6z"/>
+            <path d="M4 15h16v6H4z"/>
+            <path d="M10 21v-4h4v4"/>
+            <circle cx="12" cy="12.5" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Temple Crowd Monitoring</h1>
+          <p class="subtitle">Live entry, exit and AI occupancy prediction</p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="live" title="Real-Time Data Feed">
+          <span id="liveDot" class="dot"></span>
+          <svg class="live-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+            <line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+          <span id="liveText">Connecting…</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+
+    <!-- Top 3 Primary Stat Cards (With Elegant Micro-Icon Badges) -->
+    <section class="top-cards">
+      <article class="stat-card">
+        <div class="card-icon-badge entries-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+        </div>
+        <p class="stat-value entries-color" id="entries">0</p>
+        <p class="stat-label">Today's Entries</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="card-icon-badge exits-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <p class="stat-value exits-color" id="exits">0</p>
+        <p class="stat-label">Today's Exits</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="card-icon-badge inside-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <p class="stat-value inside-color" id="occupancy">0</p>
+        <p class="stat-label">Inside Now</p>
+      </article>
+    </section>
+
+    <!-- Upcoming Crowd Prediction Section (Exact Recreation of Reference Image) -->
+    <section class="prediction-card">
+      <div class="prediction-header">
+        <div class="clock-icon-wrapper">
+          <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h2 class="prediction-title">Upcoming Crowd Prediction</h2>
+          <p class="prediction-subtitle">Expected in the next 1 hour</p>
+        </div>
+      </div>
+
+      <!-- 2x2 Sub-Cards Grid with Semantic Micro-Icons -->
+      <div class="prediction-grid">
+        <!-- Current Crowd -->
+        <div class="sub-card">
+          <div class="sub-header-row">
+            <span class="sub-label">CURRENT CROWD</span>
+            <svg class="sub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span class="sub-value" id="predCurrentCrowd">0</span>
+          <span class="sub-note">People inside now</span>
+        </div>
+
+        <!-- Expected Crowd -->
+        <div class="sub-card sub-card-expected">
+          <div class="sub-header-row">
+            <span class="sub-label">EXPECTED CROWD</span>
+            <svg class="sub-icon spark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+              <polyline points="16 7 22 7 22 13"/>
+            </svg>
+          </div>
+          <span class="sub-value" id="predExpectedCrowd">≈ 0</span>
+          <span class="sub-note">In next 1 hour</span>
+        </div>
+
+        <!-- Status -->
+        <div class="sub-card">
+          <div class="sub-header-row">
+            <span class="sub-label">STATUS</span>
+            <svg class="sub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="status-row">
+            <span class="sphere-dot normal" id="predStatusDot"></span>
+            <span class="status-highlight normal" id="predStatusText">Normal Crowd Expected</span>
+          </div>
+        </div>
+
+        <!-- Approx Increase -->
+        <div class="sub-card">
+          <div class="sub-header-row">
+            <span class="sub-label" id="predChangeLabel">APPROX. INCREASE</span>
+            <svg class="sub-icon trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"/>
+              <polyline points="5 12 12 5 19 12"/>
+            </svg>
+          </div>
+          <span class="sub-value change-highlight" id="predApproxChange">+0 People</span>
+        </div>
+      </div>
+
+      <!-- Prediction Footer -->
+      <div class="prediction-footer">
+        <p class="prediction-summary-text" id="predMessage">Crowd is expected to remain steady within the next hour.</p>
+        <div class="prediction-updated">
+          <svg class="refresh-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          <span id="predUpdatedText">Last updated just now</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capacity Bar Overview (Operational Tier) -->
+    <section class="capacity-strip">
+      <div class="capacity-info">
+        <div class="capacity-title-wrapper">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 15h.01"/>
+            <path d="M5.636 18.364a9 9 0 1 1 12.728 0"/>
+            <line x1="12" y1="15" x2="16" y2="10"/>
+          </svg>
+          <span class="capacity-title">Temple Capacity Utilization</span>
+        </div>
+        <span class="capacity-metrics" id="occupancyNote">0% of 5,000 capacity</span>
+      </div>
+      <div class="bar">
+        <div class="bar-fill" id="occupancyBar"></div>
+      </div>
+    </section>
+
+    <!-- Gate monitoring panel (Full Width Row) -->
+    <section class="panel gate-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrapper">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M7 8h10M7 12h10M7 16h10"/>
+            </svg>
+            <h2>Gate Monitoring</h2>
+          </div>
+          <div class="panel-actions">
+            <span class="badge" id="deviceStatus">No devices</span>
+            <button type="button" class="btn-add-camera" id="toggleAddCameraBtn">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Camera IP
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Camera IP Form (Collapsible) -->
+        <div class="add-camera-container" id="addCameraContainer" style="display: none;">
+          <div class="add-camera-card">
+            <div class="add-camera-header">
+              <h3>Manually Add Camera IP</h3>
+              <p>Enter the ESP32-CAM local IP address. The system will connect and poll its counts automatically.</p>
+            </div>
+            <form id="addCameraForm" class="add-camera-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputIpAddress">Camera IP Address *</label>
+                  <input type="text" id="inputIpAddress" placeholder="e.g. 192.168.1.105" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="inputGateName">Gate Name</label>
+                  <input type="text" id="inputGateName" placeholder="e.g. Main Gopuram Gate" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="inputDeviceId">Device ID</label>
+                  <input type="text" id="inputDeviceId" placeholder="e.g. CAM-01" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label id="directionDropdownLabel">Direction</label>
+                  <input type="hidden" id="inputDirection" value="entry">
+                  <div class="custom-dropdown" id="customDirectionDropdown">
+                    <button type="button" class="custom-dropdown-trigger" id="customDropdownTrigger" aria-haspopup="listbox" aria-expanded="false">
+                      <span class="dropdown-selected-val">
+                        <span class="dropdown-icon-pill entry">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 10 12 15 17 10"/></svg>
+                        </span>
+                        <span class="dropdown-text">Entry (Ingress)</span>
+                      </span>
+                      <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="custom-dropdown-menu" id="customDropdownMenu" role="listbox" tabindex="-1">
+                      <div class="custom-dropdown-option selected" role="option" data-value="entry" aria-selected="true" tabindex="0">
+                        <div class="option-content">
+                          <span class="dropdown-icon-pill entry">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 10 12 15 17 10"/></svg>
+                          </span>
+                          <div class="option-details">
+                            <span class="option-title">Entry (Ingress)</span>
+                            <span class="option-desc">Visitors entering temple</span>
+                          </div>
+                        </div>
+                        <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+
+                      <div class="custom-dropdown-option" role="option" data-value="exit" aria-selected="false" tabindex="0">
+                        <div class="option-content">
+                          <span class="dropdown-icon-pill exit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 14 12 9 17 14"/></svg>
+                          </span>
+                          <div class="option-details">
+                            <span class="option-title">Exit (Egress)</span>
+                            <span class="option-desc">Visitors leaving temple</span>
+                          </div>
+                        </div>
+                        <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+
+                      <div class="custom-dropdown-option" role="option" data-value="both" aria-selected="false" tabindex="0">
+                        <div class="option-content">
+                          <span class="dropdown-icon-pill both">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 16 12 21 17 16"/><line x1="12" y1="21" x2="12" y2="12"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="12"/></svg>
+                          </span>
+                          <div class="option-details">
+                            <span class="option-title">Bidirectional (Both)</span>
+                            <span class="option-desc">Single camera counts In & Out</span>
+                          </div>
+                        </div>
+                        <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn-submit" id="btnSaveCamera">Connect & Save</button>
+                <button type="button" class="btn-cancel" id="btnCancelAddCamera">Cancel</button>
+                <div class="form-feedback" id="formFeedback"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="th-gate">
+                  <span class="th-content">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+                    Gate
+                  </span>
+                </th>
+                <th class="th-device">
+                  <span class="th-content">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/></svg>
+                    Device / IP
+                  </span>
+                </th>
+                <th class="th-direction text-center">
+                  <span class="th-content th-center">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    Direction
+                  </span>
+                </th>
+                <th class="th-status text-center">
+                  <span class="th-content th-center">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+                    Status
+                  </span>
+                </th>
+                <th class="th-count text-center">
+                  <span class="th-content th-center">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="12" cy="9" r="4"/></svg>
+                    In / Out
+                  </span>
+                </th>
+                <th class="th-action text-center">
+                  <span class="th-content th-center">
+                    <svg class="th-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                    Action
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="gatesBody">
+              <tr><td colspan="6" class="empty">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    <!-- Recent activity panel (Full Width Row Below) -->
+    <section class="panel activity-panel">
+      <div class="panel-header">
+        <div class="panel-title-wrapper">
+          <svg class="section-icon pulse-tint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          <h2>Recent Activity</h2>
+        </div>
+        <div class="panel-actions">
+          <span class="live-feed-pill">Live feed</span>
+          <button type="button" class="btn-tool" id="btnCopyActivity" title="Copy recent events to clipboard">
+            <svg class="btn-tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyActivityText">Copy</span>
+          </button>
+          <button type="button" class="btn-tool" id="btnExportActivity" title="Export activity log as CSV file">
+            <svg class="btn-tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export CSV</span>
+          </button>
+        </div>
+      </div>
+      <ul class="activity-list" id="activityList">
+        <li class="empty">Loading…</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Live Camera Stream Modal -->
+  <div class="stream-modal-backdrop" id="streamModal" style="display: none;">
+    <div class="stream-modal-card">
+      <div class="stream-modal-header">
+        <div class="stream-modal-title">
+          <span class="stream-live-dot"></span>
+          <h3 id="streamModalTitle">Live Camera Feed</h3>
+        </div>
+        <div class="stream-source-toggle" id="streamSourceToggle">
+          <button type="button" class="stream-source-btn active" id="streamSourceCamera" data-source="camera">Camera</button>
+          <button type="button" class="stream-source-btn" id="streamSourceAi" data-source="ai" style="display:none;">AI Overlay</button>
+        </div>
+        <button type="button" class="stream-modal-close" id="closeStreamModalBtn" aria-label="Close feed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="stream-video-container" id="streamVideoContainer">
+        <img id="streamVideoImg" src="" alt="ESP32-CAM Live Feed" onerror="this.onerror=null; this.parentElement.classList.add('stream-error');">
+        <div class="stream-error-msg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+          <p><strong>Camera Stream Offline</strong></p>
+          <span>Ensure the ESP32-CAM is powered and transmitting at the stream URL.</span>
+        </div>
+      </div>
+      <div class="stream-modal-footer">
+        <span class="stream-url-tag" id="streamModalUrl"></span>
+        <button type="button" class="btn-cancel" id="closeStreamModalBtn2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast-notification" id="toastNotification" role="alert" aria-live="polite"></div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
